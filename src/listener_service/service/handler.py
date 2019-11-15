@@ -30,6 +30,11 @@ class DjangoObjectHandler:
         obj, created = model.objects.update_or_create(id=data["pk"],
                                                       defaults=fields_trimmed)
 
+    def object_deleted_handler(self, payload, model):
+        data = json.loads(payload)
+        obj = model.objects.get(id=data["pk"])
+        obj.delete()
+
 
 class NamekoHandlerMeta(type):
     def __new__(mcs, name, bases, dct):
@@ -43,13 +48,22 @@ class NamekoHandlerMeta(type):
         except KeyError:
             raise HandlerException('Service class must define a `synced_save_models` attribute')
         for synced_save_model in synced_save_models:
-            method_name = f'{synced_save_model.__name__}_saved'
-            setattr(x, method_name, mcs.create_nameko_handler(sender_name, synced_save_model))
+            saved_method_name = f'{synced_save_model.__name__}_saved'
+            deleted_method_name = f'{synced_save_model.__name__}_deleted'
+            setattr(x, saved_method_name, mcs.create_saved_nameko_handler(sender_name, synced_save_model))
+            setattr(x, deleted_method_name, mcs.create_deleted_nameko_handler(sender_name, synced_save_model))
         return x
 
     @classmethod
-    def create_nameko_handler(mcs, sender_name, model):
+    def create_saved_nameko_handler(mcs, sender_name, model):
         @event_handler(sender_name, f'{model.__name__}_saved')
         def handler(self, payload):
             self.object_saved_handler(payload, model)
+        return handler
+
+    @classmethod
+    def create_deleted_nameko_handler(mcs, sender_name, model):
+        @event_handler(sender_name, f'{model.__name__}_deleted')
+        def handler(self, payload):
+            self.object_deleted_handler(payload, model)
         return handler
