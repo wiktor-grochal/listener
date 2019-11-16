@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'mptt',
     'debug_toolbar',
     'example',
+    'microframework',
     'django_extensions',
 ]
 
@@ -148,3 +149,5 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
     }
+
+MICROFRAMEWORK_SERVICE_CLASS = "example.service:ListenerService"

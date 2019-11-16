@@ -63,7 +63,7 @@ class NamekoHandlerMeta(type):
         @event_handler(sender_name, f'{model.__name__}_saved')
         def handler(self, payload):
             self.object_saved_handler(payload, model)
-            log.info('saved')
+            log.info(f'{model.__name__}_saved')
         return handler
 
     @classmethod
@@ -71,5 +71,5 @@ class NamekoHandlerMeta(type):
         @event_handler(sender_name, f'{model.__name__}_deleted')
         def handler(self, payload):
             self.object_deleted_handler(payload, model)
-            log.info('deleted')
+            log.info(f'{model.__name__}_deleted')
         return handler

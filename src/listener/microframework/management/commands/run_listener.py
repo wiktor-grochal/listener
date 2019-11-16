@@ -2,6 +2,7 @@ from nameko.cli import run
 import argparse
 import logging
 from django.core.management.base import BaseCommand
+from django.conf import settings
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +28,9 @@ class Command(BaseCommand):
             help='Specify a port number to host a backdoor, which can be'
                  ' connected to for an interactive interpreter within the running'
                  ' service process using `nameko backdoor`.')
-
+        if not hasattr(settings, 'MICROFRAMEWORK_SERVICE_CLASS'):
+            log.error('You need to define MICROFRAMEWORK_SERVICE_CLASS in django settings')
+            return False
         args = parser.parse_args(["--broker", AMQP_URI, "example.service:ListenerService"])
 
         run.main(args)

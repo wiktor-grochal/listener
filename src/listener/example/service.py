@@ -1,4 +1,4 @@
-from example.handler import DjangoObjectHandler, NamekoHandlerMeta
+from microframework.handler import DjangoObjectHandler, NamekoHandlerMeta
 from example.models import RegularModel
 
 
