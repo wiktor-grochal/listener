@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+import eventlet
+eventlet.monkey_patch()
 import os
 import sys
 

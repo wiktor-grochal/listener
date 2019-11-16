@@ -1,4 +1,4 @@
-from service.handler import DjangoObjectHandler, NamekoHandlerMeta
+from example.handler import DjangoObjectHandler, NamekoHandlerMeta
 from example.models import RegularModel
 
 
